@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
 	private CheckBox chkScroll;
 	private CheckBox chkReceiveText;
 	private Button clearButton;
+	private CheckBox autoSendMessageCheckBox;
 
 	private boolean mIsBluetoothConnected = false;
 
@@ -91,6 +92,7 @@ public class MainActivity extends Activity {
 		mBtnClearInput = (Button) findViewById(R.id.btnClearInput);
 		phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
 		clearButton = (Button) findViewById(R.id.clearButton);
+		autoSendMessageCheckBox = (CheckBox) findViewById(R.id.autoMessageCheckBox);
 
 		mTxtReceive.setMovementMethod(new ScrollingMovementMethod());
 
@@ -213,7 +215,8 @@ public class MainActivity extends Activity {
 									mTxtReceive.append("\n");
 									mTxtReceive.append("Chars: " + strInput.length() + " Lines: " + mTxtReceive.getLineCount() + "\n");
 
-									if (strInput.contains("thief")) {
+									if (strInput.contains("Threat") && autoSendMessageCheckBox
+											.isChecked()) {
 										thiefAlert.sendSMS();
 										chkReceiveText.setChecked(false);
 									}
