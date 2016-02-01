@@ -21,6 +21,8 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +44,7 @@ public class MainActivity extends Activity {
 	private BluetoothSocket mBTSocket;
 	private ReadInput mReadThread = null;
 	private ThiefAlert thiefAlert;
+	private EditText phoneNumberEditText;
 
 	private boolean mIsUserInitiatedDisconnect = false;
 
@@ -52,10 +55,10 @@ public class MainActivity extends Activity {
 	private Button mBtnSend;
 	private Button mBtnClear;
 	private Button mBtnClearInput;
-	private Button mBtnSendSMS;
 	private ScrollView scrollView;
 	private CheckBox chkScroll;
 	private CheckBox chkReceiveText;
+	private Button clearButton;
 
 	private boolean mIsBluetoothConnected = false;
 
@@ -86,7 +89,8 @@ public class MainActivity extends Activity {
 		chkScroll = (CheckBox) findViewById(R.id.chkScroll);
 		chkReceiveText = (CheckBox) findViewById(R.id.chkReceiveText);
 		mBtnClearInput = (Button) findViewById(R.id.btnClearInput);
-		mBtnSendSMS = (Button) findViewById(R.id.sendSMSButton);
+		phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
+		clearButton = (Button) findViewById(R.id.clearButton);
 
 		mTxtReceive.setMovementMethod(new ScrollingMovementMethod());
 
@@ -130,13 +134,30 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		mBtnSendSMS.setOnClickListener(new OnClickListener() {
+
+		phoneNumberEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				thiefAlert.setPhoneNumber(editable.toString());
+			}
+		});
+
+		//Clears the phoneNumberEditText EditText
+		clearButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
-				Toast.makeText(getBaseContext(), "Message Sent", Toast.LENGTH_LONG).show();
-				thiefAlert.sendSMS();
-
+				phoneNumberEditText.setText("");
+				phoneNumberEditText.setHint("Enter Phone Number Here");
 			}
 		});
 

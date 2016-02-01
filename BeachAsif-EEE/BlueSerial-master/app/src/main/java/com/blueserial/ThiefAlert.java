@@ -25,6 +25,14 @@ public class ThiefAlert  {
         smsManager.sendTextMessage(phoneNumber, null, message, null, null);
     }
 
+    public void setPhoneNumber(String phoneNumber){
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setMessage(String message){
+        this.message = message;
+    }
+
 
 
 
