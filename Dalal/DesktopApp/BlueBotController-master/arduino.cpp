@@ -132,7 +132,7 @@ void Arduino::keyPressEvent(QKeyEvent *event)
 void Arduino::keyReleaseEvent(QKeyEvent *event)
 {
     if (!(event->isAutoRepeat()))
-    arduino->write("q");
+    arduino->write("q\n");
 }
 
 void Arduino::setPortName()
