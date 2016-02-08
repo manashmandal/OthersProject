@@ -91,9 +91,11 @@ void loop(void){
 
   if (bluetooth.available() > 0){
     String incomingString = bluetooth.readStringUntil('\n');
+    
     input = incomingString;    
     Serial.println(input);
     bluetooth.println(input);
+    
     if (incomingString.startsWith("~")){
       Serial.println("Setting passkey");
       operation = OPERATION::SET_KEY;
