@@ -68,6 +68,7 @@ void setup(void){
   Serial.begin(baud);
   bluetooth.begin(baud);
   bluetooth.println("Initialized");
+  Serial.println("Initialized");
   locker.attach();
   locker.lock();
   operation = OPERATION::NONE;
@@ -94,7 +95,6 @@ void loop(void){
     
     input = incomingString;    
     Serial.println(input);
-    bluetooth.println(input);
     
     if (incomingString.startsWith("~")){
       Serial.println("Setting passkey");
@@ -136,7 +136,10 @@ void loop(void){
 
   //If unlocked lock it
   else if (operation == LOCK){
-    if (lockStatus().equals("UNLOCKED")) lockIt();
+    if (lockStatus().equals("UNLOCKED")) {
+      lockIt();
+      bluetooth.println("Locking...");
+    }
     operation = OPERATION::NONE;
   }
 
@@ -146,8 +149,12 @@ void loop(void){
     if (password.equals(pass_phrase) && lockStatus().equals("LOCKED")) {
       unLockIt();
       Serial.println("Pass phrase matched & unlocking");
+      bluetooth.println("Pass phrase matched and unlocking");
     }
-    else bluetooth.println("Pass phrase not matched");
+    else {
+      bluetooth.println("Pass phrase not matched");
+      bluetooth.println("Pass phrase not matched");
+    }
     operation = OPERATION::NONE;
   }
   

@@ -13,15 +13,19 @@ import java.util.UUID;
 import com.blueserial.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -43,14 +47,20 @@ public class MainActivity extends Activity {
 
 	// All controls here
 	private TextView mTxtReceive;
-	private EditText mEditSend;
+
 	private Button mBtnDisconnect;
-	private Button mBtnSend;
-	private Button mBtnClear;
+
 	private Button mBtnClearInput;
 	private ScrollView scrollView;
 	private CheckBox chkScroll;
 	private CheckBox chkReceiveText;
+	private Button lockStatusButton;
+	private Button lockButton;
+	private Button unlockButton;
+	private EditText passwordEditText;
+	private String user_password;
+	private String passkey;
+	private Button setPasswordButton;
 
 	private boolean mIsBluetoothConnected = false;
 
@@ -58,8 +68,59 @@ public class MainActivity extends Activity {
 
 	private ProgressDialog progressDialog;
 
+
+	private void openDialog(){
+		LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+		View subView = inflater.inflate(R.layout.password_input, null);
+		final EditText subEditText = (EditText)subView.findViewById(R.id.dialogEditText);
+
+
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Enter Pass Key");
+		builder.setMessage("Enter password to unlock the lock");
+		builder.setView(subView);
+		AlertDialog alertDialog = builder.create();
+
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+//				textInfo.setText(subEditText.getText().toString());
+				user_password = subEditText.getText().toString();
+				if (user_password.equals(passwordEditText.getText().toString())){
+
+					Toast.makeText(getApplicationContext(), "Password Match\n Sending Unlock " +
+							"request", Toast.LENGTH_SHORT).show();
+					String sendData = "/" + passkey + "\n";
+					sendStringToArduino(sendData);
+
+				} else Toast.makeText(getApplicationContext(), "Password Not Matched", Toast
+						.LENGTH_LONG).show();
+			}
+		});
+
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_LONG).show();
+			}
+		});
+
+		builder.show();
+	}
+
+
+	public void sendStringToArduino(String data){
+		try {
+			mBTSocket.getOutputStream().write(data.getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ActivityHelper.initialize(this);
@@ -73,14 +134,18 @@ public class MainActivity extends Activity {
 		Log.d(TAG, "Ready");
 
 		mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
-		mBtnSend = (Button) findViewById(R.id.btnSend);
-		mBtnClear = (Button) findViewById(R.id.btnClear);
 		mTxtReceive = (TextView) findViewById(R.id.txtReceive);
-		mEditSend = (EditText) findViewById(R.id.editSend);
 		scrollView = (ScrollView) findViewById(R.id.viewScroll);
 		chkScroll = (CheckBox) findViewById(R.id.chkScroll);
 		chkReceiveText = (CheckBox) findViewById(R.id.chkReceiveText);
 		mBtnClearInput = (Button) findViewById(R.id.btnClearInput);
+		unlockButton = (Button) findViewById(R.id.unlockButton);
+		lockButton = (Button) findViewById(R.id.lockButton);
+		lockStatusButton = (Button) findViewById(R.id.lockStatusButton);
+		passwordEditText = (EditText) findViewById(R.id.passwordEditText);
+		setPasswordButton = (Button) findViewById(R.id.setPasswordButton);
+
+		setTitle("Android Home Locker");
 
 		mTxtReceive.setMovementMethod(new ScrollingMovementMethod());
 
@@ -93,26 +158,7 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		mBtnSend.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				try {
-					mBTSocket.getOutputStream().write(mEditSend.getText().toString().getBytes());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		mBtnClear.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				mEditSend.setText("");
-			}
-		});
 		
 		mBtnClearInput.setOnClickListener(new OnClickListener() {
 			
@@ -122,6 +168,44 @@ public class MainActivity extends Activity {
 			}
 		});
 
+		unlockButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				openDialog();
+			}
+		});
+
+
+		setPasswordButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				passkey = passwordEditText.getText().toString();
+				Toast.makeText(getApplicationContext(), "Password is set: " + passkey, Toast
+						.LENGTH_LONG).show();
+				String sendData = "~" + passkey + "\n";
+				sendData = "~" + passkey + "\n";
+				sendStringToArduino(sendData);
+			}
+		});
+
+		lockButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(getApplicationContext(), "Locking...", Toast.LENGTH_SHORT).show();
+				String lockCommand = "=Lock";
+				sendStringToArduino(lockCommand);
+			}
+		});
+
+		lockStatusButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(getApplicationContext(), "Requesting Lock Status", Toast
+						.LENGTH_SHORT).show();
+				String checkStatus = "*CheckLock";
+				sendStringToArduino(checkStatus);
+			}
+		});
 	}
 
 	private class ReadInput implements Runnable {

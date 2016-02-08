@@ -50,9 +50,9 @@
 
     <ScrollView
         android:id="@+id/viewScroll"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_width="348dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.01" >
 
         <TextView
             android:id="@+id/txtReceive"
@@ -65,33 +65,57 @@
             android:scrollbars="vertical" />
     </ScrollView>
 
-    <EditText
-        android:id="@+id/editSend"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter command ..."
-        android:inputType="text" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Set Password"
+            android:id="@+id/textView"/>
+
+        <EditText
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/passwordEditText"
+            android:text="pass"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set"
+            android:id="@+id/setPasswordButton"/>
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/btnClear"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:padding="5dp"
-            android:text="Clear" />
+            android:text="Lock"
+            android:id="@+id/lockButton"
+            android:layout_gravity="center_horizontal"/>
 
         <Button
-            android:id="@+id/btnSend"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:padding="5dp"
-            android:text="Send" />
+            android:text="Unlock"
+            android:id="@+id/unlockButton"
+            android:layout_gravity="right"/>
+
+        <Button
+            android:layout_width="177dp"
+            android:layout_height="wrap_content"
+            android:text="Lock Status"
+            android:id="@+id/lockStatusButton"/>
     </LinearLayout>
 
 </LinearLayout> <!-- </RelativeLayout> -->

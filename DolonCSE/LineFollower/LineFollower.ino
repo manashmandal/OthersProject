@@ -17,7 +17,8 @@
 
 #define threshold 800
 
-//#define __debug__
+#define __debug__
+//#define __analog__
 
 
 

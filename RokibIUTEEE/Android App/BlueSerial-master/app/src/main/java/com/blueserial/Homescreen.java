@@ -61,9 +61,11 @@ public class Homescreen extends Activity {
 	public static final String BUFFER_SIZE = "com.blueserial.buffersize";
 	private static final String TAG = "BlueTest5-Homescreen";
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		
 		setContentView(R.layout.activity_homescreen);
 		ActivityHelper.initialize(this); //This is to ensure that the rotation persists across activities and not just this one
@@ -125,6 +127,8 @@ public class Homescreen extends Activity {
 				startActivity(intent);
 			}
 		});
+
+		setTitle("Android Home Locker");
 	}
 
 	/**
