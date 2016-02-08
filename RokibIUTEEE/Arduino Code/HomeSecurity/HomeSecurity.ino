@@ -56,29 +56,99 @@ String lockStatus(void){
   else return "UNLOCKED";
 }
 
+//Operations
+enum OPERATION {SET_KEY, UNLOCK, LOCK, LOCK_STATUS, VERIFY_PASSWORD, NONE};
+
+OPERATION operation;
+
 
 SoftwareSerial bluetooth(RX, TX);
 
 void setup(void){
   Serial.begin(baud);
   bluetooth.begin(baud);
+  bluetooth.println("Initialized");
   locker.attach();
   locker.lock();
+  operation = OPERATION::NONE;
 }
+
+/*
+ * =====================================
+ *          Recognizing the string 
+ * =====================================
+ * 
+ * if incomingString starts with '~' -> Set Password Mode enabled
+ * incomingString starts with '#' -> Get status mode enabled
+ * incomingString starts with '/' -> Verify password [if matched then opend if not stay closed]
+ * incomingString starts with '*' -> 
+ * 
+ */
+
+String input = "";
 
 void loop(void){
 
   if (bluetooth.available() > 0){
     String incomingString = bluetooth.readStringUntil('\n');
-
+    input = incomingString;    
+    Serial.println(input);
+    bluetooth.println(input);
     if (incomingString.startsWith("~")){
-      setPassPhrase(incomingString);
-    } else if (incomingString.startsWith("/")){
-      bluetooth.println("Lock status " + lockStatus());
-    } else if (incomingString.startsWith("*")){
-      if (incomingString.equals(pass_phrase)) locker.unLock()
+      Serial.println("Setting passkey");
+      operation = OPERATION::SET_KEY;
+    } 
+    
+    else if (incomingString.startsWith("/")){
+      Serial.println("Operation Unlock");
+      operation = OPERATION::UNLOCK;
+    } 
+    
+    else if (incomingString.startsWith("*")){
+      Serial.println("Checking lock status");
+      operation = OPERATION::LOCK_STATUS;
+    } 
+    
+    else if (incomingString.startsWith("=")){
+      Serial.println("Locking");
+      operation = OPERATION::LOCK;
     }
+
+    else operation = OPERATION::NONE;
   }
+
+
+  //Set passphrase
+  if (operation == OPERATION::SET_KEY){
+    input = input.substring(1);
+    setPassPhrase(input);
+    Serial.println(pass_phrase);
+    operation = OPERATION::NONE;
+  }
+
+  //Print out lock status
+  else if (operation == LOCK_STATUS){
+    bluetooth.println(lockStatus());
+    operation = OPERATION::NONE;
+  }
+
+  //If unlocked lock it
+  else if (operation == LOCK){
+    if (lockStatus().equals("UNLOCKED")) lockIt();
+    operation = OPERATION::NONE;
+  }
+
+  //First check the password if matched open the lock
+  else if (operation == UNLOCK){
+    String password = input.substring(1);
+    if (password.equals(pass_phrase) && lockStatus().equals("LOCKED")) {
+      unLockIt();
+      Serial.println("Pass phrase matched & unlocking");
+    }
+    else bluetooth.println("Pass phrase not matched");
+    operation = OPERATION::NONE;
+  }
+  
   
 }
 
