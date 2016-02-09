@@ -74,11 +74,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Set Password"
+            android:text="Master Password:"
             android:id="@+id/textView"/>
 
         <EditText
-            android:layout_width="186dp"
+            android:layout_width="122dp"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
@@ -86,9 +86,9 @@
             android:text="pass"/>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="89dp"
             android:layout_height="wrap_content"
-            android:text="Set"
+            android:text="Unlock"
             android:id="@+id/setPasswordButton"/>
     </LinearLayout>
 

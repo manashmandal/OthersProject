@@ -87,15 +87,18 @@ public class MainActivity extends Activity {
 			public void onClick(DialogInterface dialog, int which) {
 //				textInfo.setText(subEditText.getText().toString());
 				user_password = subEditText.getText().toString();
-				if (user_password.equals(passwordEditText.getText().toString())){
-
-					Toast.makeText(getApplicationContext(), "Password Match\n Sending Unlock " +
-							"request", Toast.LENGTH_SHORT).show();
-					String sendData = "/" + passkey + "\n";
-					sendStringToArduino(sendData);
-
-				} else Toast.makeText(getApplicationContext(), "Password Not Matched", Toast
-						.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Verifying Pass Key", Toast.LENGTH_SHORT).show();
+				String sendData = "/" + passkey + "\n";
+				sendStringToArduino(sendData);
+//				if (user_password.equals(passwordEditText.getText().toString())){
+//
+//					Toast.makeText(getApplicationContext(), "Password Match\n Sending Unlock " +
+//							"request", Toast.LENGTH_SHORT).show();
+//					String sendData = "/" + passkey + "\n";
+//					sendStringToArduino(sendData);
+//
+//				} else Toast.makeText(getApplicationContext(), "Password Not Matched", Toast
+//						.LENGTH_LONG).show();
 			}
 		});
 

@@ -2,6 +2,8 @@
 
 #include <SoftwareSerial.h>
 
+const String password = "Rokib";
+String master_key = "master_password";
 
 
 /*  =============================
@@ -96,12 +98,12 @@ void loop(void){
     input = incomingString;    
     Serial.println(input);
     
-    if (incomingString.startsWith("~")){
-      Serial.println("Setting passkey");
-      operation = OPERATION::SET_KEY;
-    } 
+//    if (incomingString.startsWith("~")){
+//      Serial.println("Setting passkey");
+//      operation = OPERATION::SET_KEY;
+//    } 
     
-    else if (incomingString.startsWith("/")){
+    if (incomingString.startsWith("/")){
       Serial.println("Operation Unlock");
       operation = OPERATION::UNLOCK;
     } 
@@ -146,13 +148,12 @@ void loop(void){
   //First check the password if matched open the lock
   else if (operation == UNLOCK){
     String password = input.substring(1);
-    if (password.equals(pass_phrase) && lockStatus().equals("LOCKED")) {
+    if (password.equals(password) && lockStatus().equals("LOCKED")) {
       unLockIt();
       Serial.println("Pass phrase matched & unlocking");
       bluetooth.println("Pass phrase matched and unlocking");
     }
     else {
-      bluetooth.println("Pass phrase not matched");
       bluetooth.println("Pass phrase not matched");
     }
     operation = OPERATION::NONE;
