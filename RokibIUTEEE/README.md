@@ -1,9 +1,14 @@
 # Android Based Remote Locking System
 
-## Android App
-![app0](http://i.imgur.com/wAtsB0E.png)
-![app1](http://i.imgur.com/oglZULf.png)
-![app2](http://i.imgur.com/BB6ml2S.png)
-![app3](http://i.imgur.com/BB6ml2S.png)
-![app4](http://i.imgur.com/BB6ml2S.png)
-![app5](http://i.imgur.com/BB6ml2S.png)
+## Components:
+* Servo Motor
+* Arduino 
+* Bluetooth Module (HC-05 / HC-06)
+* Android Device Running Android Version > 2.2
+
+## Detailed Spec:
+* Baud Rate 9600
+* Tested on Lolipop
+* Tested on Arduino Nano, UNO and MEGA 2560
+* Tested using HC-05
+
