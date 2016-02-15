@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
 //				textInfo.setText(subEditText.getText().toString());
 				user_password = subEditText.getText().toString();
 				Toast.makeText(getApplicationContext(), "Verifying Pass Key", Toast.LENGTH_SHORT).show();
-				String sendData = "/" + passkey + "\n";
+				String sendData = "/" + user_password + "\n";
 				sendStringToArduino(sendData);
 //				if (user_password.equals(passwordEditText.getText().toString())){
 //
@@ -145,8 +145,7 @@ public class MainActivity extends Activity {
 		unlockButton = (Button) findViewById(R.id.unlockButton);
 		lockButton = (Button) findViewById(R.id.lockButton);
 		lockStatusButton = (Button) findViewById(R.id.lockStatusButton);
-		passwordEditText = (EditText) findViewById(R.id.passwordEditText);
-		setPasswordButton = (Button) findViewById(R.id.setPasswordButton);
+
 
 		setTitle("Android Home Locker");
 
@@ -179,17 +178,7 @@ public class MainActivity extends Activity {
 		});
 
 
-		setPasswordButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				passkey = passwordEditText.getText().toString();
-				Toast.makeText(getApplicationContext(), "Password is set: " + passkey, Toast
-						.LENGTH_LONG).show();
-				String sendData = "~" + passkey + "\n";
-				sendData = "~" + passkey + "\n";
-				sendStringToArduino(sendData);
-			}
-		});
+
 
 		lockButton.setOnClickListener(new OnClickListener() {
 			@Override

@@ -1,9 +1,10 @@
 #include "Lock.h"
-
 #include <SoftwareSerial.h>
 
-const String password = "Rokib";
-String master_key = "master_password";
+
+//User saved password in mcu
+const String pass_phrase = "Rokib";
+
 
 
 /*  =============================
@@ -27,6 +28,7 @@ String master_key = "master_password";
 #define UNLOCK_ANGLE 0
 #define LOCK_ANGLE 90
 #define SERVO_PIN 9 //Use a PWM Pin
+#define led 13
 
 Lock locker(SERVO_PIN, UNLOCK_ANGLE, LOCK_ANGLE);
 
@@ -38,11 +40,6 @@ Lock locker(SERVO_PIN, UNLOCK_ANGLE, LOCK_ANGLE);
  * 
  */
 
-String pass_phrase = "";
-
-void setPassPhrase(String key){
-  pass_phrase = key;
-}
 
 void unLockIt(void){
   locker.unlock();
@@ -59,7 +56,7 @@ String lockStatus(void){
 }
 
 //Operations
-enum OPERATION {SET_KEY, UNLOCK, LOCK, LOCK_STATUS, VERIFY_PASSWORD, NONE};
+enum OPERATION {UNLOCK, LOCK, LOCK_STATUS, VERIFY_PASSWORD, NONE};
 
 OPERATION operation;
 
@@ -74,6 +71,7 @@ void setup(void){
   locker.attach();
   locker.lock();
   operation = OPERATION::NONE;
+  pinMode(led, OUTPUT);
 }
 
 /*
@@ -98,11 +96,6 @@ void loop(void){
     input = incomingString;    
     Serial.println(input);
     
-//    if (incomingString.startsWith("~")){
-//      Serial.println("Setting passkey");
-//      operation = OPERATION::SET_KEY;
-//    } 
-    
     if (incomingString.startsWith("/")){
       Serial.println("Operation Unlock");
       operation = OPERATION::UNLOCK;
@@ -122,14 +115,6 @@ void loop(void){
   }
 
 
-  //Set passphrase
-  if (operation == OPERATION::SET_KEY){
-    input = input.substring(1);
-    setPassPhrase(input);
-    Serial.println(pass_phrase);
-    operation = OPERATION::NONE;
-  }
-
   //Print out lock status
   else if (operation == LOCK_STATUS){
     bluetooth.println(lockStatus());
@@ -143,18 +128,21 @@ void loop(void){
       bluetooth.println("Locking...");
     }
     operation = OPERATION::NONE;
+    digitalWrite(led, LOW); //Turn of the light
   }
 
   //First check the password if matched open the lock
   else if (operation == UNLOCK){
     String password = input.substring(1);
-    if (password.equals(password) && lockStatus().equals("LOCKED")) {
+    if (password.equals(pass_phrase) && lockStatus().equals("LOCKED")) {
       unLockIt();
       Serial.println("Pass phrase matched & unlocking");
       bluetooth.println("Pass phrase matched and unlocking");
+      digitalWrite(led, HIGH);
     }
     else {
       bluetooth.println("Pass phrase not matched");
+      digitalWrite(led, LOW);
     }
     operation = OPERATION::NONE;
   }
