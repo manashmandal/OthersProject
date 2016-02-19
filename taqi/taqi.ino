@@ -1,14 +1,23 @@
 //#define __DEBUG__
 
-#define threshold 500
+#define threshold 200
 #define baud 9600
 #define short_del 500
 #define long_del 2000
 
-const unsigned int red[] = {10, 7, 2, 13}; //r1, r2, r3, r4
-const unsigned int yellow[] = {9, 6, 3, 12};
+unsigned int new_pin1 = A4;
+unsigned int new_pin2 = A5;
+
+const unsigned int red[] = {10, 7, new_pin1, 13}; //r1, r2, r3, r4
+const unsigned int yellow[] = {9, 6, new_pin2, 12};
 const unsigned int green[] = {8, 5, 4, 11};
-const unsigned int ir[] = {0, 1, 2, 3}; 
+
+int ir1 = 0;
+int ir2 = 1;
+int ir3 = 2;
+int ir4 = 3;
+
+int ir[] = {ir1, ir2, ir3, ir4}; 
 
 bool reading[] = {false, false, false, false};
 
