@@ -8,7 +8,7 @@
 const unsigned int red[] = {10, 7, 2, 13}; //r1, r2, r3, r4
 const unsigned int yellow[] = {9, 6, 3, 12};
 const unsigned int green[] = {8, 5, 4, 11};
-const unsigned int ir[] = {A2, A3, A1, A0}; 
+const unsigned int ir[] = {0, 1, 2, 3}; 
 
 bool reading[] = {false, false, false, false};
 
