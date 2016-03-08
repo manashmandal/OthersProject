@@ -26,6 +26,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -61,6 +62,14 @@ public class MainActivity extends Activity {
 	private String user_password;
 	private String passkey;
 	private Button setPasswordButton;
+
+	//LED controls button
+	private Button buttonLEDOneOn;
+	private Button buttonLEDOneOff;
+	private Button buttonLEDTwoOn;
+	private Button buttonLEDTwoOff;
+	private Button buttonLEDThree;
+
 
 	private boolean mIsBluetoothConnected = false;
 
@@ -146,6 +155,11 @@ public class MainActivity extends Activity {
 		lockButton = (Button) findViewById(R.id.lockButton);
 		lockStatusButton = (Button) findViewById(R.id.lockStatusButton);
 
+		buttonLEDOneOn = (Button) findViewById(R.id.buttonLEDOneOn);
+		buttonLEDOneOff = (Button) findViewById(R.id.buttonLEDOneOff);
+		buttonLEDTwoOn = (Button) findViewById(R.id.buttonLEDTwoOn);
+		buttonLEDTwoOff = (Button) findViewById(R.id.buttonLEDTwoOff);
+		buttonLEDThree = (Button) findViewById(R.id.buttonLEDThree);
 
 		setTitle("Android Home Locker");
 
@@ -196,6 +210,56 @@ public class MainActivity extends Activity {
 						.LENGTH_SHORT).show();
 				String checkStatus = "*CheckLock";
 				sendStringToArduino(checkStatus);
+			}
+		});
+
+		buttonLEDOneOn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(getApplicationContext(), "LED 1 ON", Toast.LENGTH_SHORT).show();
+				String LEDOneOnString = "-1ON";
+				sendStringToArduino(LEDOneOnString);
+			}
+		});
+
+		buttonLEDOneOff.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(getApplicationContext(), "LED 1 OFF", Toast.LENGTH_SHORT).show();
+				String LEDOneOffString = "-1OFF";
+				sendStringToArduino(LEDOneOffString);
+			}
+		});
+
+		buttonLEDTwoOn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(getApplicationContext(), "LED 2 ON", Toast.LENGTH_SHORT).show();
+				String LEDTwoOnString = "-2ON";
+				sendStringToArduino(LEDTwoOnString);
+			}
+		});
+
+		buttonLEDTwoOff.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(getApplicationContext(), "LED 2 OFF", Toast.LENGTH_SHORT).show();
+				String LEDTwoOffString = "-2OFF";
+				sendStringToArduino(LEDTwoOffString);
+			}
+		});
+
+		buttonLEDThree.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+					String LEDThreeOnString = "-3ON";
+					sendStringToArduino(LEDThreeOnString);
+				} else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+					String LEDThreeOffString = "-3OFF";
+					sendStringToArduino(LEDThreeOffString);
+				}
+				return true;
 			}
 		});
 	}

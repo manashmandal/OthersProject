@@ -6,6 +6,23 @@
 const String pass_phrase = "Rokib";
 
 
+//Command for LED
+String ledOneOn = "-1ON";
+String ledOneOff = "-1OFF";
+String ledTwoOn = "-2ON";
+String ledTwoOff = "-2OFF";
+String ledThreeOn = "-3ON";
+String ledThreeOff = "-3OFF";
+
+
+/*
+ * 
+ * LED Pins
+ */
+
+#define led1 5
+#define led2 6
+#define led3 7
 
 /*  =============================
  *   Serial Communication
@@ -28,7 +45,7 @@ const String pass_phrase = "Rokib";
 #define UNLOCK_ANGLE 0
 #define LOCK_ANGLE 90
 #define SERVO_PIN 9 //Use a PWM Pin
-#define led 13
+#define led 8
 
 Lock locker(SERVO_PIN, UNLOCK_ANGLE, LOCK_ANGLE);
 
@@ -56,7 +73,7 @@ String lockStatus(void){
 }
 
 //Operations
-enum OPERATION {UNLOCK, LOCK, LOCK_STATUS, VERIFY_PASSWORD, NONE};
+enum OPERATION {UNLOCK, LOCK, LOCK_STATUS, VERIFY_PASSWORD, NONE, LED_ONE_ON, LED_ONE_OFF, LED_TWO_ON, LED_TWO_OFF, LED_THREE_ON, LED_THREE_OFF};
 
 OPERATION operation;
 
@@ -72,6 +89,9 @@ void setup(void){
   locker.lock();
   operation = OPERATION::NONE;
   pinMode(led, OUTPUT);
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
 }
 
 /*
@@ -83,7 +103,7 @@ void setup(void){
  * incomingString starts with '#' -> Get status mode enabled
  * incomingString starts with '/' -> Verify password [if matched then opend if not stay closed]
  * incomingString starts with '*' -> 
- * 
+ * incomingString starts with '-' -> LED operation
  */
 
 String input = "";
@@ -109,6 +129,22 @@ void loop(void){
     else if (incomingString.startsWith("=")){
       Serial.println("Locking");
       operation = OPERATION::LOCK;
+    }
+
+    else if (incomingString.startsWith("-")){
+      if (incomingString.equals(ledOneOn)){
+        operation = LED_ONE_ON;
+      } else if (incomingString.equals(ledOneOff)){
+        operation = LED_ONE_OFF;
+      } else if (incomingString.equals(ledTwoOn)) {
+        operation = LED_TWO_ON;
+      } else if (incomingString.equals(ledTwoOff)){
+        operation = LED_TWO_OFF;
+      } else if (incomingString.equals(ledThreeOn)){
+        operation = LED_THREE_ON;
+      } else if (incomingString.equals(ledThreeOff)){
+        operation = LED_THREE_OFF;
+      }
     }
 
     else operation = OPERATION::NONE;
@@ -145,6 +181,36 @@ void loop(void){
       digitalWrite(led, LOW);
     }
     operation = OPERATION::NONE;
+  }
+
+  else if (operation == LED_ONE_ON){
+    digitalWrite(led1, HIGH);
+    operation = NONE;
+  } 
+
+  else if (operation == LED_ONE_OFF){
+    digitalWrite(led1, LOW);
+    operation = NONE;
+  }
+
+  else if (operation == LED_TWO_ON){
+    digitalWrite(led2, HIGH);
+    operation = NONE;
+  }
+
+  else if (operation == LED_TWO_OFF){
+    digitalWrite(led2, LOW);
+    operation = NONE;
+  }
+
+  else if (operation == LED_THREE_ON){
+    digitalWrite(led3, HIGH);
+    operation = NONE;
+  }
+
+  else if (operation == LED_THREE_OFF){
+    digitalWrite(led3, LOW);
+    operation = NONE;
   }
   
   
